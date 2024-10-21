@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тени королевства</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        #game-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .choice-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            text-align: left;
+        }
+        .choice-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div id="game-container">
+    <h1 id="game-title">Тени королевства</h1>
+    <div id="story-text"></div>
+    <div id="choices"></div>
+</div>
+
+<script>
+    // Объект игрока
+    const player = {
+        name: "",
+        class: "",
+        background: "",
+        reputation: {
+            nobles: 0,
+            rebels: 0,
+            peasants: 0
+        }
+    };
+
+    // Функция для отображения текста истории
+    function displayStory(text) {
+        document.getElementById('story-text').innerText = text;
+    }
+
+    // Функция для отображения выборов
+    function displayChoices(choices) {
+        const choicesContainer = document.getElementById('choices');
+        choicesContainer.innerHTML = "";
+        choices.forEach((choice, index) => {
+            const button = document.createElement('button');
+            button.className = 'choice-button';
+            button.innerText = choice.text;
+            button.onclick = () => choice.action();
+            choicesContainer.appendChild(button);
+        });
+    }
+
+    // Функция для выбора персонажа
+    function chooseCharacter() {
+        displayStory("Выберите класс персонажа:");
+        displayChoices([
+            { text: "Рыцарь", action: () => { player.class = "Рыцарь"; chooseBackground(); } },
+            { text: "Маг", action: () => { player.class = "Маг"; chooseBackground(); } },
+            { text: "Торговец", action: () => { player.class = "Торговец"; chooseBackground(); } },
+            { text: "Шпион", action: () => { player.class = "Шпион"; chooseBackground(); } }
+        ]);
+    }
+
+    // Функция для выбора предыстории
+    function chooseBackground() {
+        displayStory("Выберите вашу предысторию:");
+        displayChoices([
+            { text: "Верность королю", action: () => { player.background = "Верность королю"; startGame(); } },
+            { text: "Месть за погибшего близкого", action: () => { player.background = "Месть за погибшего близкого"; startGame(); } },
+            { text: "Желание изменить королевство к лучшему", action: () => { player.background = "Желание изменить королевство к лучшему"; startGame(); } }
+        ]);
+    }
+
+    // Функция для начала игры
+    function startGame() {
+        displayStory(`Вы выбрали класс ${player.class} и предысторию "${player.background}".`);
+        displayChoices([
+            { text: "Начать игру", action: () => { mainStory(); } }
+        ]);
+    }
+
+    // Основная история
+    function mainStory() {
+        displayStory("Королевство Элендора, некогда процветающее, находится в хаосе после смерти короля. Вы должны найти свой путь в этом хаосе, укрепить свои позиции и, возможно, стать новым правителем.");
+        displayChoices([
+            { text: "Присоединиться к сторонникам законного наследника", action: () => { player.reputation.nobles += 10; nextChapter(); } },
+            { text: "Поддержать мятежников", action: () => { player.reputation.rebels += 10; nextChapter(); } },
+            { text: "Попытаться создать собственные союзы", action: () => { player.reputation.nobles += 5; player.reputation.rebels += 5; nextChapter(); } }
+        ]);
+    }
+
+    // Функция для перехода к следующей главе
+    function nextChapter() {
+        displayStory("Вы сделали свой выбор. Теперь вам предстоит столкнуться с новыми вызовами.");
+        displayChoices([
+            { text: "Продолжить", action: () => { finalChapter(); } }
+        ]);
+    }
+
+    // Финальная глава
+    function finalChapter() {
+        displayStory("Вы достигли конца своего пути. В зависимости от ваших решений, вы можете занять трон, погибнуть в битве, стать изгнанником или создать идеальное королевство.");
+        displayChoices([
+            { text: "Завершить игру", action: () => { endGame(); } }
+        ]);
+    }
+
+    // Функция для завершения игры
+    function endGame() {
+        displayStory("Спасибо за игру! Ваш финал будет основан на ваших действиях и репутации.");
+        displayChoices([]);
+    }
+
+    // Запуск игры
+    chooseCharacter();
+</script>
+</body>
+</html>
